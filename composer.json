@@ -13,7 +13,7 @@
     "require": {
 		"php": ">=7.0",
         "waughj/test-hash-item": "*",
-        "waughj/html-image-slider": "*",
+        "waughj/html-image-slider": ">=0.2.0",
         "waughj/wp-upload-image": "*"
     },
     "require-dev": {
