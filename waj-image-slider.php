@@ -19,14 +19,16 @@
 
 		use WaughJ\HTMLImageSlider\HTMLImageSlider;
 		use WaughJ\WPUploadImage\WPUploadImage;
+		use WaughJ\WPUploadPicture\WPUploadPicture;
 		use function WaughJ\TestHashItem\TestHashItemString;
+		use function WaughJ\TestHashItem\TestHashItemIsTrue;
 
 		add_action
 		(
 			'wp_enqueue_scripts',
 			function()
 			{
-				wp_enqueue_style( 'waj-slider', plugins_url( '', __FILE__ ) . '/vendor/waughj/html-image-slider/css/slider.css', [], null );
+				wp_enqueue_style( 'waj-slider', plugins_url( '', __FILE__ ) . '/vendor/waughj/html-image-slider/css/slider.min.css', [], null );
 			}
 		);
 
@@ -42,9 +44,19 @@
 					$image_ids = explode( ',', $image_attr );
 					foreach ( $image_ids as $image_id )
 					{
-						$images[] = new WPUploadImage( $image_id );
+						$images[] = new WPUploadPicture( $image_id );
 					}
-					return new HTMLImageSlider( $images );
+
+					add_action
+					(
+						'wp_footer',
+						function()
+						{
+							wp_enqueue_script( 'waj-slider', plugins_url( '', __FILE__ ) . '/vendor/waughj/html-image-slider/js/slider.min.js', [], null );
+						}
+					);
+
+					return new HTMLImageSlider( $images, TestHashItemIsTrue( $atts, 'zoom' ) );
 				}
 				return '';
 			}
