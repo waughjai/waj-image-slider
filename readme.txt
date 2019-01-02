@@ -25,6 +25,10 @@ Plugin that creates shortcode for easy creation o' image sliders.
 
 	[waj-image-slider images="5,6,7"]
 
+To make it slowly zoom in, add zoom attribute set to true:
+
+	[waj-image-slider images="5,6,7" zoom="true"]
+
 
 == Changelog ==
 
