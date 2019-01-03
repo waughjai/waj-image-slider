@@ -20,6 +20,7 @@
 		use WaughJ\WPUploadPicture\WPUploadPicture;
 		use function WaughJ\TestHashItem\TestHashItemString;
 		use function WaughJ\TestHashItem\TestHashItemIsTrue;
+		use function WaughJ\PictureShortcodeToElementAttributes\TransformPictureShortcodeToElementAttributes;
 
 		add_action
 		(
@@ -36,13 +37,22 @@
 			function( $atts )
 			{
 				$image_attr = TestHashItemString( $atts, 'images', null );
+				unset( $atts[ 'images' ] );
+				$atts = TransformPictureShortcodeToElementAttributes( $atts );
+				$picture_atts =
+				[
+					'img-attributes' => $atts[ 'img-attributes' ],
+					'picture-attributes' => $atts[ 'picture-attributes' ],
+					'source-attributes' => $atts[ 'source-attributes' ]
+				];
+				unset( $atts[ 'img-attributes' ], $atts[ 'picture-attributes' ], $atts[ 'source-attributes' ] );
 				if ( $image_attr !== null )
 				{
 					$images = [];
 					$image_ids = explode( ',', $image_attr );
 					foreach ( $image_ids as $image_id )
 					{
-						$images[] = new WPUploadPicture( $image_id );
+						$images[] = new WPUploadPicture( $image_id, $picture_atts );
 					}
 
 					add_action
@@ -54,7 +64,9 @@
 						}
 					);
 
-					return new HTMLImageSlider( $images, TestHashItemIsTrue( $atts, 'zoom' ) );
+					$zoom = TestHashItemIsTrue( $atts, 'zoom' );
+					unset( $atts[ 'zoom' ] );
+					return new HTMLImageSlider( $images, $zoom, $atts );
 				}
 				return '';
 			}
